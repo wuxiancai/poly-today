@@ -3355,7 +3355,6 @@ class CryptoTrader:
 
                         if prices['yes'] is not None and prices['no'] is not None:
                             yes_price = float(prices['yes'])
-                            self.logger.info(f"yes_price: {yes_price}")
                             no_price = float(prices['no'])
 
                         # 判断 YES 和 NO 价格是否在 48-56 之间
