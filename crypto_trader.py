@@ -345,7 +345,7 @@ class CryptoTrader:
         ttk.Label(initial_frame, text="Initial:").pack(side=tk.LEFT)
         self.initial_amount_entry = ttk.Entry(initial_frame, width=2)
         self.initial_amount_entry.pack(side=tk.LEFT)
-        self.initial_amount_entry.insert(0, "2")
+        self.initial_amount_entry.insert(0, "3")
         
         # 反水一次设置
         first_frame = ttk.Frame(amount_frame)
