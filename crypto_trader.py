@@ -109,7 +109,7 @@ class CryptoTrader:
         self.url_monitoring_lock = threading.Lock()
         self.refresh_page_lock = threading.Lock()
 
-        self.default_target_price = 0.52
+        self.default_target_price = 0.53
         self._amounts_logged = False
         # 在初始化部分添加
         self.stop_event = threading.Event()
@@ -393,12 +393,6 @@ class CryptoTrader:
                                          style='Blue.TButton')
         self.btc_button.grid(row=1, column=0, padx=2, pady=3)
 
-        # 添加搜索ETH周链接按钮
-        self.eth_button = ttk.Button(buttons_frame, text="ETH", 
-                                         command=lambda: self.find_new_weekly_url('ETH'), width=3,
-                                         style='Blue.TButton')
-        self.eth_button.grid(row=1, column=1, padx=2, pady=3)
-
         # 配置列权重使输入框均匀分布
         for i in range(8):
             settings_container.grid_columnconfigure(i, weight=1)
@@ -456,14 +450,14 @@ class CryptoTrader:
         self.set_amount_button['state'] = 'disabled'  # 初始禁用
 
         # 添加价格按钮
-        prices = ['0.52', '0.53']
+        prices = ['0.53', '0.54']
         for price in prices:
             btn = ttk.Button(
                 button_frame, 
                 text=price,
                 width=3.5,
                 command=lambda p=price: self.set_default_price(p),
-                style='Red.TButton' if price == '0.52' else 'Black.TButton'
+                style='Red.TButton' if price == '0.53' else 'Black.TButton'
             )
             btn.pack(side=tk.LEFT, padx=2)
         
@@ -3318,8 +3312,7 @@ class CryptoTrader:
             
             # 设置搜索关键词
             coins = [
-                'BTC',
-                'ETH'
+                'BTC'
             ]
             for coin in coins:
                 try:  # 为每个币种添加单独的异常处理
@@ -3432,15 +3425,13 @@ class CryptoTrader:
             original_tab = self.driver.current_window_handle
 
             # 重置所有按钮样式为蓝色
-            for btn in [self.btc_button, self.eth_button]:
+            for btn in [self.btc_button]:
                 btn.configure(style='Blue.TButton')
             
             # 设置被点击的按钮为红色
             if coin == 'BTC':
                 self.btc_button.configure(style='Red.TButton')
-            elif coin == 'ETH':
-                self.eth_button.configure(style='Red.TButton')
-
+            
             base_url = "https://polymarket.com/markets/crypto?_s=start_date%3Adesc"
             self.driver.switch_to.new_window('tab')
             self.driver.get(base_url)
@@ -3456,8 +3447,8 @@ class CryptoTrader:
             
             # 设置搜索关键词
             link_text_map = {
-                'BTC': 'Bitcoin Up or Down on',
-                'ETH': 'Ethereum Up or Down on'
+                'BTC': 'Bitcoin Up or Down on'
+                
             }
             search_text = link_text_map.get(coin, '')
             
