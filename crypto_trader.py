@@ -2893,7 +2893,10 @@ class CryptoTrader:
             
             # 关闭第一个标签窗口
             if len(all_handles) >= 2:
-                self.driver.close(all_handles[0])
+                self.driver.switch_to.window(all_handles[0])
+                self.driver.close()
+                self.driver.switch_to.window(all_handles[-1])
+               
         except Exception as e:
             self.logger.error(f"自动点击失败: {str(e)}")
             self.root.after(10000, self.auto_start_monitor)
