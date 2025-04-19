@@ -1610,7 +1610,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy Yes1",
+                                trade_type="Buy Up1",
                                 price=yes_price,
                                 amount=float(self.yes1_amount_entry.get()),
                                 trade_count=self.trade_count
@@ -1684,7 +1684,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy No1",
+                                trade_type="Buy Down1",
                                 price=no_price,
                                 amount=float(self.no1_amount_entry.get()),
                                 trade_count=self.trade_count
@@ -1809,7 +1809,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy Yes 2",
+                                trade_type="Buy Up2",
                                 price=yes_price,
                                 amount=float(self.buy_yes_amount),
                                 trade_count=self.trade_count
@@ -1860,7 +1860,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy No 2",
+                                trade_type="Buy Down2",
                                 price=no_price,
                                 amount=float(self.buy_no_amount),
                                 trade_count=self.trade_count
@@ -1950,7 +1950,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy Yes 3",
+                                trade_type="Buy Up3",
                                 price=yes_price,
                                 amount=float(self.buy_yes_amount),
                                 trade_count=self.trade_count
@@ -2000,7 +2000,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy No 3",
+                                trade_type="Buy Down3",
                                 price=no_price,
                                 amount=float(self.buy_no_amount),
                                 trade_count=self.trade_count
@@ -2104,7 +2104,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy Yes 4",
+                                trade_type="Buy Up4",
                                 price=yes_price,
                                 amount=float(self.buy_yes_amount),
                                 trade_count=self.trade_count
@@ -2168,7 +2168,7 @@ class CryptoTrader:
                             self.trade_count += 1
                             # 发送交易邮件
                             self.send_trade_email(
-                                trade_type="Buy No4",
+                                trade_type="Buy Down4",
                                 price=no_price,
                                 amount=float(self.buy_no_amount),
                                 trade_count=self.trade_count
@@ -2391,7 +2391,7 @@ class CryptoTrader:
                 
             # 发送交易邮件 - 卖出YES
             self.send_trade_email(
-                trade_type="Sell Yes",
+                trade_type="Sell Up",
                 price=yes_price,
                 amount=self.position_yes_cash(),  # 卖出时金额为总持仓
                 trade_count=self.sell_count  # 使用卖出计数器
@@ -2445,7 +2445,7 @@ class CryptoTrader:
                 
             # 发送交易邮件 - 卖出NO
             self.send_trade_email(
-                trade_type="Sell No",
+                trade_type="Sell Down",
                 price=no_price,
                 amount=self.position_no_cash(),  # 卖出时金额为总持仓
                 trade_count=self.sell_count  # 使用卖出计数器
