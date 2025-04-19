@@ -2887,15 +2887,13 @@ class CryptoTrader:
             # 强制点击按钮（即使状态为disabled）
             self.start_button.invoke()
             time.sleep(5)
-            # 保存所有窗口标签,并关闭第一个标签
+            
             # 获取所有窗口句柄
             all_handles = self.driver.window_handles
             
-            # 切换到最新打开的标签页
+            # 关闭第一个标签窗口
             if len(all_handles) >= 2:
                 self.driver.close(all_handles[0])
-                
-
         except Exception as e:
             self.logger.error(f"自动点击失败: {str(e)}")
             self.root.after(10000, self.auto_start_monitor)
