@@ -15,7 +15,7 @@ import json
 import threading
 import time
 import os
-import pytesseract
+import subprocess
 from screeninfo import get_monitors
 import logging
 from datetime import datetime, timezone, timedelta
@@ -353,7 +353,7 @@ class CryptoTrader:
         ttk.Label(first_frame, text="Turn-1:").pack(side=tk.LEFT)
         self.first_rebound_entry = ttk.Entry(first_frame, width=3)
         self.first_rebound_entry.pack(side=tk.LEFT)
-        self.first_rebound_entry.insert(0, "250")
+        self.first_rebound_entry.insert(0, "300")
         
         # 反水N次设置
         n_frame = ttk.Frame(amount_frame)
@@ -376,7 +376,7 @@ class CryptoTrader:
         weeks_frame.pack(side=tk.LEFT, padx=2)
         self.doubling_weeks_entry = ttk.Entry(weeks_frame, width=2, style='Red.TEntry')
         self.doubling_weeks_entry.pack(side=tk.LEFT)
-        self.doubling_weeks_entry.insert(0, "40")
+        self.doubling_weeks_entry.insert(0, "30")
         ttk.Label(weeks_frame, text="Double", style='Red.TLabel').pack(side=tk.LEFT)
 
         # 交易币种按钮放在trades_frame中
@@ -923,9 +923,14 @@ class CryptoTrader:
             
             # 获取当前脚本的完整路径
             script_path = os.path.abspath('start_chrome.sh')
-            # 使用osascript打开新终端并执行脚本
-            os.system(f'''osascript -e 'tell application "Terminal" to do script "cd {os.getcwd()} && bash {script_path}"' ''')
-            self.logger.info("已在新终端中启动Chrome浏览器")
+           # 直接在当前进程中执行脚本，而不是打开新终端
+            try:
+                # 使用subprocess直接执行脚本，不打开新终端
+                subprocess.run(['bash', script_path], check=True)
+                self.logger.info("✅ 已重新启动Chrome浏览器")
+            except Exception as chrome_e:
+                self.logger.error(f"启动Chrome浏览器失败: {str(chrome_e)}")
+
             # 等待Chrome启动
             time.sleep(5)
             target_url = self.url_entry.get()
@@ -1150,6 +1155,7 @@ class CryptoTrader:
         self.no1_price_entry.delete(0, tk.END)
         self.no1_price_entry.insert(0, self.default_target_price)
         self.logger.info(f"✅ 设置买入价格{self.default_target_price}成功")
+        self.close_windows()
 
     def set_yes_no_cash(self):
         """设置 Yes/No 各级金额"""
@@ -1584,7 +1590,7 @@ class CryptoTrader:
                 no1_target = float(self.no1_price_entry.get())
                 self.trading = True  # 开始交易
                 # 检查Yes1价格匹配
-                if 0 <= (yes_price - yes1_target ) <= 0.02 and yes1_target > 0:
+                if 0 <= (yes_price - yes1_target ) <= 0.03 and yes1_target > 0:
                     while True:
                         self.logger.info("Yes 1价格匹配,执行自动交易")
                         # 执行现有的交易操作
@@ -1643,11 +1649,11 @@ class CryptoTrader:
                                 # 设置 Yes5和No5价格为0.85
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.9")
+                                self.yes5_price_entry.insert(0, "0.98")
                                 self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                                 self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.9")
+                                self.no5_price_entry.insert(0, "0.98")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.logger.info("First_trade执行成功")
                                 break
@@ -1656,7 +1662,7 @@ class CryptoTrader:
                             time.sleep(2)  # 添加延时避免过于频繁的重试
 
                 # 检查No1价格匹配
-                elif 0 <= (no_price - no1_target ) <= 0.02 and no1_target > 0:
+                elif 0 <= (no_price - no1_target ) <= 0.03 and no1_target > 0:
                     while True:
                         self.logger.info("No 1价格匹配,执行自动交易") 
                         # 执行现有的交易操作
@@ -1717,11 +1723,11 @@ class CryptoTrader:
                                 # 设置 Yes5和No5价格为0.85
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.9")
+                                self.yes5_price_entry.insert(0, "0.98")
                                 self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                                 self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.9")
+                                self.no5_price_entry.insert(0, "0.98")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.logger.info("First_trade执行成功")
                                 break
@@ -1771,7 +1777,7 @@ class CryptoTrader:
                 self.trading = True  # 开始交易
             
                 # 检查Yes2价格匹配
-                if 0 <= (yes_price - yes2_target ) <= 0.02 and yes2_target > 0:
+                if 0 <= (yes_price - yes2_target ) <= 0.03 and yes2_target > 0:
                     while True:
                         self.logger.info("Yes 2价格匹配,执行自动交易")
                         # 执行现有的交易操作
@@ -1820,7 +1826,7 @@ class CryptoTrader:
                             self.logger.warning("交易失败,等待2秒后重试")
                             time.sleep(2)  # 添加延时避免过于频繁的重试
                 # 检查No2价格匹配
-                elif 0 <= (no_price - no2_target ) <= 0.02 and no2_target > 0:
+                elif 0 <= (no_price - no2_target ) <= 0.03 and no2_target > 0:
                     while True:
                         self.logger.info("No 2价格匹配,执行自动交易")
                         
@@ -1913,7 +1919,7 @@ class CryptoTrader:
                 self.trading = True  # 开始交易
             
                 # 检查Yes3价格匹配
-                if 0 <= (yes_price - yes3_target ) <= 0.02 and yes3_target > 0:
+                if 0 <= (yes_price - yes3_target ) <= 0.03 and yes3_target > 0:
                     while True:
                         self.logger.info("Yes 3价格匹配,执行自动交易")
                         # 执行交易操作
@@ -1961,7 +1967,7 @@ class CryptoTrader:
                             self.logger.warning("交易失败,等待2秒后重试")
                             time.sleep(2)  # 添加延时避免过于频繁的重试
                 # 检查No3价格匹配
-                elif 0 <= (no_price - no3_target ) <= 0.02 and no3_target > 0:
+                elif 0 <= (no_price - no3_target ) <= 0.03 and no3_target > 0:
                     while True:
                         self.logger.info("No 3价格匹配,执行自动交易")
                         # 执行交易操作
@@ -2053,7 +2059,7 @@ class CryptoTrader:
                 self.trading = True  # 开始交易
             
                 # 检查Yes4价格匹配
-                if 0 <= (yes_price - yes4_target ) <= 0.02 and yes4_target > 0:
+                if 0 <= (yes_price - yes4_target ) <= 0.03 and yes4_target > 0:
                     while True:
                         self.logger.info("Yes 4价格匹配,执行自动交易")
                         # 执行交易操作
@@ -2094,7 +2100,7 @@ class CryptoTrader:
                                 # 设置 Yes5和No5价格为0.85
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.9")
+                                self.yes5_price_entry.insert(0, "0.98")
                                 self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                                 self.no5_price_entry.delete(0, tk.END)
@@ -2115,7 +2121,7 @@ class CryptoTrader:
                             self.logger.warning("交易失败,等待2秒后重试")
                             time.sleep(2)  # 添加延时避免过于频繁的重试
                 # 检查No4价格匹配
-                elif 0 <= (no_price - no4_target ) <= 0.02 and no4_target > 0:
+                elif 0 <= (no_price - no4_target ) <= 0.03 and no4_target > 0:
                     while True:
                         self.logger.info("No 4价格匹配,执行自动交易")
                         # 执行交易操作
@@ -2860,13 +2866,14 @@ class CryptoTrader:
         """重启程序,保持浏览器打开"""
         try:
             self.logger.info("正在重启程序...")
+            time.sleep(5)  # 等待10秒,确保程序完全关闭,防止程序重启时出现
             self.update_status("正在重启程序...")
             # 获取当前脚本的完整路径
             script_path = os.path.abspath('run_trader.sh')
-        
+            
             # 使用完整路径和正确的参数顺序
             os.execl('/bin/bash', '/bin/bash', script_path, '--restart')
-        
+           
         except Exception as e:
             self.logger.error(f"重启程序失败: {str(e)}")
             self.update_status(f"重启程序失败: {str(e)}")
@@ -2881,26 +2888,34 @@ class CryptoTrader:
             # 清除可能存在的锁定状态
             self.running = False
 
-            self.logger.info("尝试自动点击开始监控按钮...")
-            self.logger.info(f"当前开始按钮状态: {self.start_button['state']}")
-                
             # 强制点击按钮（即使状态为disabled）
             self.start_button.invoke()
             time.sleep(5)
-            
-            # 获取所有窗口句柄
-            all_handles = self.driver.window_handles
-            
-            # 关闭第一个标签窗口
-            if len(all_handles) >= 2:
-                self.driver.switch_to.window(all_handles[0])
-                self.driver.close()
-                self.driver.switch_to.window(all_handles[-1])
+            self.close_windows()
                
         except Exception as e:
             self.logger.error(f"自动点击失败: {str(e)}")
             self.root.after(10000, self.auto_start_monitor)
-
+    def close_windows(self):
+        """关闭多余窗口"""
+        # 检查并关闭多余的窗口，只保留一个
+        all_handles = self.driver.window_handles
+        
+        if len(all_handles) > 1:
+            self.logger.info(f"当前窗口数: {len(all_handles)}，准备关闭多余窗口")
+            # 保留最后一个窗口，关闭其他所有窗口
+            current_handle = all_handles[-1]  # 使用最后一个窗口
+            
+            # 关闭除了最后一个窗口外的所有窗口
+            for handle in all_handles[:-1]:
+                self.driver.switch_to.window(handle)
+                self.driver.close()
+            
+            # 切换到保留的窗口
+            self.driver.switch_to.window(current_handle)
+            
+        else:
+            self.logger.warning("❗ 当前窗口数不足2个,无需切换")
 
     def sleep_refresh(self, operation_name="未指定操作"):
         """
