@@ -143,7 +143,7 @@ class CryptoTrader:
         # 如果是重启,延迟2秒后自动点击开始监控
         if self.is_restart:
             self.logger.info("检测到重启模式,安排自动点击开始按钮！")
-            self.root.after(10000, self.auto_start_monitor)
+            self.root.after(5000, self.auto_start_monitor)
       
     def load_config(self):
         """加载配置文件，保持默认格式"""
@@ -2886,7 +2886,15 @@ class CryptoTrader:
                 
             # 强制点击按钮（即使状态为disabled）
             self.start_button.invoke()
-            self.logger.info("已成功触发开始按钮")
+            time.sleep(5)
+            # 保存所有窗口标签,并关闭第一个标签
+            # 获取所有窗口句柄
+            all_handles = self.driver.window_handles
+            
+            # 切换到最新打开的标签页
+            if len(all_handles) >= 2:
+                self.driver.close(all_handles[0])
+                
 
         except Exception as e:
             self.logger.error(f"自动点击失败: {str(e)}")
