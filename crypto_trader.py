@@ -109,7 +109,7 @@ class CryptoTrader:
         self.url_monitoring_lock = threading.Lock()
         self.refresh_page_lock = threading.Lock()
 
-        self.default_target_price = 0.53
+        self.default_target_price = 0.52
         self._amounts_logged = False
         # 在初始化部分添加
         self.stop_event = threading.Event()
@@ -450,14 +450,14 @@ class CryptoTrader:
         self.set_amount_button['state'] = 'disabled'  # 初始禁用
 
         # 添加价格按钮
-        prices = ['0.53', '0.54']
+        prices = ['0.52', '0.53']
         for price in prices:
             btn = ttk.Button(
                 button_frame, 
                 text=price,
                 width=3.5,
                 command=lambda p=price: self.set_default_price(p),
-                style='Red.TButton' if price == '0.53' else 'Black.TButton'
+                style='Red.TButton' if price == '0.52' else 'Black.TButton'
             )
             btn.pack(side=tk.LEFT, padx=2)
         
@@ -788,7 +788,7 @@ class CryptoTrader:
         # 启动URL监控
         self.root.after(4000, self.start_url_monitoring)
         # 启动自动找币
-        self.schedule_auto_find_coin()
+        self.root.after(180000, self.start_auto_find_coin)
 
     def _start_browser_monitoring(self, new_url):
         """在新线程中执行浏览器操作"""
@@ -1949,7 +1949,7 @@ class CryptoTrader:
                             # 设置No4价格为默认值
                             self.no4_price_entry = self.no_frame.grid_slaves(row=6, column=1)[0]
                             self.no4_price_entry.delete(0, tk.END)
-                            self.no4_price_entry.insert(0, str(self.default_target_price))
+                            self.no4_price_entry.insert(0, (self.default_target_price + 0.02))
                             self.no4_price_entry.configure(foreground='red')  # 添加红色设置
 
                             # 增加交易次数
@@ -1999,7 +1999,7 @@ class CryptoTrader:
                             # 设置Yes4价格为默认值
                             self.yes4_price_entry = self.yes_frame.grid_slaves(row=6, column=1)[0]
                             self.yes4_price_entry.delete(0, tk.END)
-                            self.yes4_price_entry.insert(0, str(self.default_target_price))
+                            self.yes4_price_entry.insert(0, (self.default_target_price + 0.02))
                             self.yes4_price_entry.configure(foreground='red')  # 添加红色设置
                         
                             # 增加交易次数
@@ -2090,21 +2090,21 @@ class CryptoTrader:
                                 # 设置 Yes5价格为 0.98和No5价格为0.5
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.98")
+                                self.yes5_price_entry.insert(0, "0.51")
                                 self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                                 self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.52")
+                                self.no5_price_entry.insert(0, "0.05")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                             else:
                                 # 设置 Yes5和No5价格为0.85
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.98")
+                                self.yes5_price_entry.insert(0, "0.51")
                                 self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                                 self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.52")
+                                self.no5_price_entry.insert(0, "0.05")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                             # 增加交易次数
                             self.trade_count += 1
@@ -2153,21 +2153,21 @@ class CryptoTrader:
                                 # 设置 Yes5价格为 0.5和No5价格为0.98
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.52")
+                                self.yes5_price_entry.insert(0, "0.05")
                                 self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                                 self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.98")
+                                self.no5_price_entry.insert(0, "0.51")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                             else:
                                 # 设置 Yes5和No5价格为0.85
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.52")
+                                self.yes5_price_entry.insert(0, "0.05")
                                 self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                                 self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                                 self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.98")
+                                self.no5_price_entry.insert(0, "0.51")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                                 
                             # 增加交易次数
@@ -3165,15 +3165,6 @@ class CryptoTrader:
                 time.sleep(retry_delay)
                 self.driver.refresh()
         return False
-    
-    def is_auto_find_54_coin_time(self):
-        """自动找币时段改为全天可用"""
-        try:
-            self.logger.info("✅ 自动找币功能已改为全天可用")
-            return True
-        except Exception as e:
-            self.logger.error(f"找币时间判断异常: {str(e)}")
-            return False
         
     # 是否持仓
     def is_position_yes_or_no(self):
@@ -3316,8 +3307,7 @@ class CryptoTrader:
             self.stop_auto_find_coin()
         # 没有持仓就判断是否到了找币时间
         else:
-            if self.is_auto_find_54_coin_time():
-                
+            if self.schedule_auto_find_coin():
                 self.auto_find_coin_timer = self.root.after(0, self.find_54_coin)
             else:
                 self.logger.info("当前不处于自动找币时段")
@@ -3410,8 +3400,8 @@ class CryptoTrader:
             self.root.after(5000, self.start_url_monitoring)
             self.start_auto_find_coin_running = False
             # 增加 10 分钟后再次找币
-            self.schedule_auto_find_coin()
-            self.logger.info("明天再次找币")
+            self.root.after(self.refresh_interval, self.start_auto_find_coin)
+            self.logger.info("10分钟后再次找币")
 
         except Exception as e:
             self.logger.error(f"自动找币异常: {str(e)}")
@@ -3454,8 +3444,7 @@ class CryptoTrader:
             # 日志记录
             self.logger.info(f"✅ 自动找币功能将在 {target_time.strftime('%Y-%m-%d %H:%M:%S')} 启动")
             
-            # 设置定时器
-            self.root.after(600000, self.start_auto_find_coin)
+            return True
         except Exception as e:
             self.logger.error(f"设置自动找币定时任务失败: {str(e)}")
             
