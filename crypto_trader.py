@@ -3295,10 +3295,12 @@ class CryptoTrader:
             self.refresh_page()
             self.start_auto_find_coin_running = False
             self.stop_auto_find_coin()
+            
         # 没有持仓就判断是否到了找币时间
         else:
             if self.schedule_auto_find_coin():
                 self.auto_find_coin_timer = self.root.after(0, self.find_54_coin)
+                
             else:
                 self.logger.info("当前不处于自动找币时段")
                 self.start_auto_find_coin_running = False
@@ -3416,28 +3418,39 @@ class CryptoTrader:
             self.stop_auto_find_running = True
 
     def schedule_auto_find_coin(self):
-        """安排每天23:51启动自动找币功能"""
+        """判断当前时间是否在今天23:50到明天1:00之间"""
         try:
-            # 获取当前时间
-            now = datetime.now()
+            # 获取当前北京时间
+            beijing_tz = timezone(timedelta(hours=8))
+            now_time = datetime.now(timezone.utc).astimezone(beijing_tz)
             
-            # 计算今天的23:51
-            target_time = now.replace(hour=23, minute=51, second=0, microsecond=0)
+            # 计算今天的23:50
+            today_2350 = now_time.replace(hour=23, minute=50, second=0, microsecond=0)
             
-            # 如果当前时间已经过了23:51，则计算到明天23:51的时间
-            if now >= target_time:
-                target_time = target_time + timedelta(days=1)
+            # 计算明天的1:00
+            tomorrow = now_time + timedelta(days=1)
+            tomorrow_0100 = tomorrow.replace(hour=1, minute=0, second=0, microsecond=0)
             
-            # 计算时间差（毫秒）
-            time_diff = (target_time - now).total_seconds() * 1000
+            # 如果今天已经过了23:50，需要使用今天的23:50
+            # 如果现在是明天，需要重新计算今天的23:50
+            if now_time.hour < 1 or (now_time.hour == 1 and now_time.minute == 0):
+                yesterday = now_time - timedelta(days=1)
+                today_2350 = yesterday.replace(hour=23, minute=50, second=0, microsecond=0)
             
-            # 日志记录
-            self.logger.info(f"✅ 自动找币功能将在 {target_time.strftime('%Y-%m-%d %H:%M:%S')} 启动")
+            # 判断当前时间是否在指定时间段内
+            is_in_timeframe = today_2350 <= now_time < tomorrow_0100
             
-            return True
+            # 记录日志
+            if is_in_timeframe:
+                self.logger.info(f"\033[31m✅ 当前时间 {now_time.strftime('%H:%M:%S')} 在自动找币时间段内\033[0m")
+            else:
+                self.logger.info(f"❌ 当前时间 {now_time.strftime('%H:%M:%S')} 不在自动找币时间段内")
+            
+            return is_in_timeframe
+            
         except Exception as e:
-            self.logger.error(f"设置自动找币定时任务失败: {str(e)}")
-            
+            self.logger.error(f"判断自动找币时间失败: {str(e)}")
+            return False
 
     def find_new_weekly_url(self, coin):
         """在Polymarket市场搜索指定币种的周合约地址,只返回周合约地址"""
