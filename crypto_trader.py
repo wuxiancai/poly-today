@@ -99,10 +99,6 @@ class CryptoTrader:
         self.trade_count = 0
         self.sell_count = 0  # 添加卖出计数器
 
-        # 生成随机的5-10分钟（以毫秒为单位）
-        random_minutes = random.uniform(5, 10)
-        self.refresh_interval = int(random_minutes * 60000)  # 转换为毫秒
-
         # 添加定时器
         self.refresh_page_timer = None  # 用于存储定时器ID
         self.url_check_timer = None
@@ -141,14 +137,6 @@ class CryptoTrader:
 
         # 打印启动参数
         self.logger.info(f"CryptoTrader初始化,启动参数: {sys.argv}")
-    
-        # 检查是否是重启
-        self.is_restart = '--restart' in sys.argv
-        
-        # 如果是重启,延迟2秒后自动点击开始监控
-        if self.is_restart:
-            self.logger.info("检测到重启模式,安排自动点击开始按钮！")
-            self.root.after(5000, self.auto_start_monitor)
       
     def load_config(self):
         """加载配置文件，保持默认格式"""
@@ -1478,6 +1466,10 @@ class CryptoTrader:
     # 添加刷新方法
     def refresh_page(self):
         """定时刷新页面"""
+        # 生成随机的5-10分钟（以毫秒为单位）
+        random_minutes = random.uniform(5, 10)
+        self.refresh_interval = int(random_minutes * 60000)  # 转换为毫秒
+
         with self.refresh_page_lock:
             self.refresh_page_running = True
             try:
@@ -1492,7 +1484,7 @@ class CryptoTrader:
                 if self.running and self.driver and not self.trading:
                     self.driver.refresh()
                     refresh_time = self.refresh_interval / 60000
-                    self.logger.info(f"✅ {refresh_time}分钟后刷新成功")      
+                    self.logger.info(f"✅ {refresh_time} 分钟后刷新成功")      
                 else:
                     self.logger.info("刷新失败")
                     self.logger.info(f"trading={self.trading}")
@@ -1628,30 +1620,17 @@ class CryptoTrader:
                             self.no2_price_entry.insert(0, str(self.default_target_price))
                             self.no2_price_entry.configure(foreground='red')  # 添加红色设置
 
-                            if self.is_restart:
-                                # 设置 Yes5和No5价格为0.98
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.98")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.98")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.logger.info("First_trade执行成功")
-                                break
-                            else:
-                                # 设置 Yes5和No5价格为0.85
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.98")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.98")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.logger.info("First_trade执行成功")
-                                break
+                            # 设置 Yes5和No5价格为0.98
+                            self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                            self.yes5_price_entry.delete(0, tk.END)
+                            self.yes5_price_entry.insert(0, "0.98")
+                            self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                            self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                            self.no5_price_entry.delete(0, tk.END)
+                            self.no5_price_entry.insert(0, "0.98")
+                            self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+                            self.logger.info("First_trade执行成功")
+                            break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
                             time.sleep(2)  # 添加延时避免过于频繁的重试
@@ -1702,30 +1681,17 @@ class CryptoTrader:
                             self.yes2_price_entry.insert(0, str(self.default_target_price))
                             self.yes2_price_entry.configure(foreground='red')  # 添加红色设置
 
-                            if self.is_restart:
-                                # 设置 Yes5和No5价格为0.98
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.98")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.98")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.logger.info("First_trade执行成功")
-                                break
-                            else:
-                                # 设置 Yes5和No5价格为0.85
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.98")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.98")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.logger.info("First_trade执行成功")
-                                break
+                            # 设置 Yes5和No5价格为0.98
+                            self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                            self.yes5_price_entry.delete(0, tk.END)
+                            self.yes5_price_entry.insert(0, "0.98")
+                            self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                            self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                            self.no5_price_entry.delete(0, tk.END)
+                            self.no5_price_entry.insert(0, "0.98")
+                            self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+                            self.logger.info("First_trade执行成功")
+                            break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
                             time.sleep(2)  # 添加延时避免过于频繁的重试                           
@@ -2080,27 +2046,17 @@ class CryptoTrader:
                             self.no4_price_entry.delete(0, tk.END)
                             self.no4_price_entry.insert(0, "0.00")
 
-                            """当买了 4次后预防第 5 次反水，所以价格到了 50 时就平仓，然后再自动开"""
-                            if self.is_restart:
-                                # 设置 Yes5价格为 0.03和No5价格为0.51
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.51")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.02")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
-                            else:
-                                # 设置 Yes5和No5价格为0.85
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.51")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.02")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+                            """当买了 4次后预防第 5 次反水，所以价格到了 51 时就平仓，然后再自动开"""
+                            # 设置 Yes5和No5价格为0.85
+                            self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                            self.yes5_price_entry.delete(0, tk.END)
+                            self.yes5_price_entry.insert(0, "0.51")
+                            self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                            self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                            self.no5_price_entry.delete(0, tk.END)
+                            self.no5_price_entry.insert(0, "0.02")
+                            self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+
                             # 增加交易次数
                             self.trade_count += 1
                             # 发送交易邮件
@@ -2144,27 +2100,16 @@ class CryptoTrader:
                             self.no4_price_entry.insert(0, "0.00")
 
                             """当买了 4次后预防第 5 次反水，所以价格到了 50 时就平仓，然后再自动开"""
-                            if self.is_restart:
-                                # 设置 Yes5价格为 0.5和No5价格为0.98
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.02")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.51")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
-                            else:
-                                # 设置 Yes5和No5价格为0.85
-                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
-                                self.yes5_price_entry.delete(0, tk.END)
-                                self.yes5_price_entry.insert(0, "0.02")
-                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
-                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
-                                self.no5_price_entry.delete(0, tk.END)
-                                self.no5_price_entry.insert(0, "0.51")
-                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
-                                
+                            # 设置 Yes5和No5价格为0.85
+                            self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                            self.yes5_price_entry.delete(0, tk.END)
+                            self.yes5_price_entry.insert(0, "0.02")
+                            self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                            self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                            self.no5_price_entry.delete(0, tk.END)
+                            self.no5_price_entry.insert(0, "0.51")
+                            self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+                            
                             # 增加交易次数
                             self.trade_count += 1
                             # 发送交易邮件
@@ -3295,14 +3240,12 @@ class CryptoTrader:
             self.refresh_page()
             self.start_auto_find_coin_running = False
             self.stop_auto_find_coin()
-            
+
         # 没有持仓就判断是否到了找币时间
         else:
             if self.schedule_auto_find_coin():
-                self.auto_find_coin_timer = self.root.after(0, self.find_54_coin)
-                
+                self.auto_find_coin_timer = self.root.after(0, self.find_54_coin)    
             else:
-                self.logger.info("当前不处于自动找币时段")
                 self.start_auto_find_coin_running = False
 
     def find_54_coin(self):
@@ -3418,33 +3361,20 @@ class CryptoTrader:
             self.stop_auto_find_running = True
 
     def schedule_auto_find_coin(self):
-        """判断当前时间是否在今天23:50到明天1:00之间"""
+        """判断当前时间是否在每天0点10分到0点30分之间"""
         try:
             # 获取当前北京时间
             beijing_tz = timezone(timedelta(hours=8))
             now_time = datetime.now(timezone.utc).astimezone(beijing_tz)
             
-            # 计算今天的23:50
-            today_2350 = now_time.replace(hour=23, minute=50, second=0, microsecond=0)
-            
-            # 计算明天的1:00
-            tomorrow = now_time + timedelta(days=1)
-            tomorrow_0100 = tomorrow.replace(hour=1, minute=0, second=0, microsecond=0)
-            
-            # 如果今天已经过了23:50，需要使用今天的23:50
-            # 如果现在是明天，需要重新计算今天的23:50
-            if now_time.hour < 1 or (now_time.hour == 1 and now_time.minute == 0):
-                yesterday = now_time - timedelta(days=1)
-                today_2350 = yesterday.replace(hour=23, minute=50, second=0, microsecond=0)
-            
-            # 判断当前时间是否在指定时间段内
-            is_in_timeframe = today_2350 <= now_time < tomorrow_0100
+            # 判断是否在0点10分到0点30分之间
+            is_in_timeframe = (now_time.hour == 0 and 10 <= now_time.minute < 30)
             
             # 记录日志
             if is_in_timeframe:
-                self.logger.info(f"\033[31m✅ 当前时间 {now_time.strftime('%H:%M:%S')} 在自动找币时间段内\033[0m")
+                self.logger.info(f"\033[31m✅ {now_time.strftime('%H:%M:%S')} 在自动找币时间段内,开始找币!\033[0m")
             else:
-                self.logger.info(f"❌ 当前时间 {now_time.strftime('%H:%M:%S')} 不在自动找币时间段内")
+                self.logger.info(f"❌ {now_time.strftime('%H:%M:%S')} 不在自动找币时间段内,停止找币!")
             
             return is_in_timeframe
             
@@ -3684,11 +3614,6 @@ if __name__ == "__main__":
         # 初始化日志
         logger = Logger("main")
         logger.info(f"程序启动，参数: {sys.argv}")
-        
-        # 检查是否是重启模式
-        is_restart = '--restart' in sys.argv
-        if is_restart:
-            logger.info("检测到--restart参数")
             
         # 创建并运行主程序
         app = CryptoTrader()
