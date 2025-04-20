@@ -767,7 +767,7 @@ class CryptoTrader:
         # 启动URL监控
         self.root.after(4000, self.start_url_monitoring)
         # 启动自动找币
-        self.root.after(180000, self.start_auto_find_coin)
+        self.root.after(90000, self.start_auto_find_coin)
 
     def _start_browser_monitoring(self, new_url):
         """在新线程中执行浏览器操作"""
