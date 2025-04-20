@@ -2273,36 +2273,6 @@ class CryptoTrader:
             self.update_status(f"Sell_no执行失败: {str(e)}")
         finally:
             self.trading = False
-    
-    def reset_trade(self):
-        """重置交易"""
-        self.logger.info("重置交易,把 YES1/NO1 价格设置为目标价格")
-        # 在所有操作完成后,重置交易
-        time.sleep(2)
-        
-        self.set_yes_no_cash()
-        # 重置Yes1和No1价格为0.53
-        
-        self.set_yes_no_default_target_price()
-    
-    def is_sell_accept(self):
-        """检查是否存在"Accept"按钮"""
-        try:
-            accept_button = self.driver.find_element(By.XPATH, XPathConfig.ACCEPT_BUTTON[0])
-            
-        except NoSuchElementException:
-            accept_button = self._find_element_with_retry(
-                XPathConfig.ACCEPT_BUTTON,
-                timeout=3,
-                silent=True
-            )
-           
-        if accept_button:
-            self.logger.info("检测到ACCEPT弹窗")
-            return True
-        else:
-            self.logger.info("没有检测到ACCEPT弹窗")
-            return False
             
     def only_sell_yes(self):
         """只卖出YES"""
@@ -2405,6 +2375,36 @@ class CryptoTrader:
         else:
             self.logger.warning("卖出only_sell_no验证失败,重试")
             return self.only_sell_no()
+    
+    def reset_trade(self):
+        """重置交易"""
+        self.logger.info("重置交易,把 YES1/NO1 价格设置为目标价格")
+        # 在所有操作完成后,重置交易
+        time.sleep(2)
+        
+        self.set_yes_no_cash()
+        # 重置Yes1和No1价格为0.53
+        
+        self.set_yes_no_default_target_price()
+    
+    def is_sell_accept(self):
+        """检查是否存在"Accept"按钮"""
+        try:
+            accept_button = self.driver.find_element(By.XPATH, XPathConfig.ACCEPT_BUTTON[0])
+            
+        except NoSuchElementException:
+            accept_button = self._find_element_with_retry(
+                XPathConfig.ACCEPT_BUTTON,
+                timeout=3,
+                silent=True
+            )
+           
+        if accept_button:
+            self.logger.info("检测到ACCEPT弹窗")
+            return True
+        else:
+            self.logger.info("没有检测到ACCEPT弹窗")
+            return False
         
     """以上代码是交易主体函数 1-4,从第 1370 行到第 2242行"""
 
@@ -2435,7 +2435,7 @@ class CryptoTrader:
             )
             position_value = None
             position_value = self.find_position_label_yes()
-            self.logger.info(f"position_value: {position_value}")
+            
             # 根据position_value的值决定点击哪个按钮
             if position_value:
                 # 如果第一行是Up，点击第二的按钮
@@ -2477,7 +2477,7 @@ class CryptoTrader:
             )
             position_value = None
             position_value = self.find_position_label_no()
-            self.logger.info(f"position_value: {position_value}")
+            
             # 根据position_value的值决定点击哪个按钮
             if position_value:
                 # 如果第二行是No，点击第一行YES 的 SELL的按钮
@@ -3030,7 +3030,7 @@ class CryptoTrader:
                 # 尝试获取YES标签
                 try:
                     position_label_up = self.driver.find_element(By.XPATH, XPathConfig.POSITION_UP_LABEL[0])
-                    if position_label_up.text == "Up":
+                    if position_label_up:
                         self.logger.info(f"找到了Up持仓标签: {position_label_up.text}")
                         return True
                     else:
@@ -3040,7 +3040,7 @@ class CryptoTrader:
                 except NoSuchElementException:
                     position_label_up = self._find_element_with_retry(XPathConfig.POSITION_UP_LABEL, timeout=3, silent=True)
 
-                    if position_label_up.text == "Up":
+                    if position_label_up:
                         self.logger.info(f"找到了Up持仓标签: {position_label_up.text}")
                         return True
                     else:
@@ -3072,11 +3072,11 @@ class CryptoTrader:
                     lambda driver: driver.execute_script('return document.readyState') == 'complete'
                 )
                 
-                # 尝试获取NO标签
+                # 尝试获取Down标签
                 try:
                     position_label_down = self.driver.find_element(By.XPATH, XPathConfig.POSITION_DOWN_LABEL[0])
                     
-                    if position_label_down.text == "Down":
+                    if position_label_down:
                         self.logger.info(f"找到了Down持仓标签: {position_label_down.text}")
                         return True
                     else:
@@ -3086,7 +3086,7 @@ class CryptoTrader:
                 except NoSuchElementException:
                     position_label_down = self._find_element_with_retry(XPathConfig.POSITION_DOWN_LABEL, timeout=3, silent=True)
 
-                    if position_label_down.text == "Down":
+                    if position_label_down:
                         self.logger.info(f"找到了Down持仓标签: {position_label_down.text}")
                         return True
                     else:
