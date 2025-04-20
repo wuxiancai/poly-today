@@ -2241,9 +2241,9 @@ class CryptoTrader:
                 if 0 <= (no_price - no5_target) <= 0.01 and no5_target > 0:
                     self.logger.info("Down 5价格匹配,执行自动卖出")
                     while True:
-                        # 卖完 NO 后，自动再卖 YES                      
+                        # 卖完 Down 后，自动再卖 Up                      
                         self.only_sell_no()
-                        self.logger.info("卖完 NO 后，再卖 YES")
+                        self.logger.info("卖完 Down 后，再卖 Up")
 
                         if self.find_position_label_yes():
                             self.only_sell_yes()
@@ -2356,7 +2356,7 @@ class CryptoTrader:
             return self.only_sell_yes()        
        
     def only_sell_no(self):
-        """只卖出NO"""
+        """只卖出Down"""
         # 获取当前价格
         prices = self.driver.execute_script("""
                 function getPrices() {
@@ -2435,9 +2435,10 @@ class CryptoTrader:
             )
             position_value = None
             position_value = self.find_position_label_yes()
+            self.logger.info(f"position_value: {position_value}")
             # 根据position_value的值决定点击哪个按钮
             if position_value == "Up":
-                # 如果第一行是Yes，点击第二的按钮
+                # 如果第一行是Up，点击第二的按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_NO_BUTTON[0])
                 except NoSuchElementException:
@@ -2447,7 +2448,7 @@ class CryptoTrader:
                         silent=True
                     )
             else:
-                # 如果第一行不存在或不是Yes，使用默认的第一行按钮
+                # 如果第一行不存在或不是Up，使用默认的第一行按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_BUTTON[0])
                 except NoSuchElementException:
@@ -3025,28 +3026,27 @@ class CryptoTrader:
                 
                 # 尝试获取YES标签
                 try:
-                    position_label_yes = self.driver.find_element(By.XPATH, XPathConfig.POSITION_UP_LABEL[0])
-                    if position_label_yes.text == "Up":
-                        self.logger.info(f"找到了Up持仓标签: {position_label_yes.text}")
+                    position_label_up = self.driver.find_element(By.XPATH, XPathConfig.POSITION_UP_LABEL[0])
+                    if position_label_up.text == "Up":
+                        self.logger.info(f"找到了Up持仓标签: {position_label_up.text}")
                         return True
                     else:
                         self.logger.debug("未找到Up持仓标签")
                         return False
                     
                 except NoSuchElementException:
-                    position_label_yes = self._find_element_with_retry(XPathConfig.POSITION_UP_LABEL, timeout=3, silent=True)
+                    position_label_up = self._find_element_with_retry(XPathConfig.POSITION_UP_LABEL, timeout=3, silent=True)
 
-                    if position_label_yes.text == "Up":
-                        self.logger.info(f"找到了Up持仓标签: {position_label_yes.text}")
+                    if position_label_up.text == "Up":
+                        self.logger.info(f"找到了Up持仓标签: {position_label_up.text}")
                         return True
                     else:
                         self.logger.debug("未找到Up持仓标签")
                         return False
                          
             except TimeoutException:
-                self.logger.debug(f"第{attempt + 1}次尝试未找到YES标签,正常情况!")
-            except Exception as e:
-                self.logger.debug(f"第{attempt + 1}次尝试发生错误: {str(e)}")
+                self.logger.debug(f"第{attempt + 1}次尝试未找到UP标签,正常情况!")
+            
                 
             if attempt < max_retries - 1:
                 self.logger.info(f"等待{retry_delay}秒后重试...")
@@ -3055,7 +3055,7 @@ class CryptoTrader:
         return False
         
     def find_position_label_no(self):
-        """查找No持仓标签"""
+        """查找Down持仓标签"""
         max_retries = 2
         retry_delay = 1
         
@@ -3071,29 +3071,27 @@ class CryptoTrader:
                 
                 # 尝试获取NO标签
                 try:
-                    position_label_no = self.driver.find_element(By.XPATH, XPathConfig.POSITION_DOWN_LABEL[0])
+                    position_label_down = self.driver.find_element(By.XPATH, XPathConfig.POSITION_DOWN_LABEL[0])
                     
-                    if position_label_no.text == "Down":
-                        self.logger.info(f"找到了Down持仓标签: {position_label_no.text}")
+                    if position_label_down.text == "Down":
+                        self.logger.info(f"找到了Down持仓标签: {position_label_down.text}")
                         return True
                     else:
                         self.logger.debug("未找到Down持仓标签")
                         return False
                     
                 except NoSuchElementException:
-                    position_label_no = self._find_element_with_retry(XPathConfig.POSITION_DOWN_LABEL, timeout=3, silent=True)
+                    position_label_down = self._find_element_with_retry(XPathConfig.POSITION_DOWN_LABEL, timeout=3, silent=True)
 
-                    if position_label_no.text == "Down":
-                        self.logger.info(f"找到了Down持仓标签: {position_label_no.text}")
+                    if position_label_down.text == "Down":
+                        self.logger.info(f"找到了Down持仓标签: {position_label_down.text}")
                         return True
                     else:
                         self.logger.debug("未找到Down持仓标签")
                         return False
                                
             except TimeoutException:
-                self.logger.warning(f"第{attempt + 1}次尝试未找到NO标签")
-            except Exception as e:
-                self.logger.error(f"第{attempt + 1}次尝试发生错误: {str(e)}")
+                self.logger.warning(f"第{attempt + 1}次尝试未找到Down标签")
                 
             if attempt < max_retries - 1:
                 self.logger.info(f"等待{retry_delay}秒后重试...")
