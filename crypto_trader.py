@@ -347,7 +347,7 @@ class CryptoTrader:
         # 初始金额
         initial_frame = ttk.Frame(amount_frame)
         initial_frame.pack(side=tk.LEFT, padx=2)
-        ttk.Label(initial_frame, text="Initial:").pack(side=tk.LEFT)
+        ttk.Label(initial_frame, text="Initial").pack(side=tk.LEFT)
         self.initial_amount_entry = ttk.Entry(initial_frame, width=2)
         self.initial_amount_entry.pack(side=tk.LEFT)
         self.initial_amount_entry.insert(0, "2")
@@ -355,7 +355,7 @@ class CryptoTrader:
         # 反水一次设置
         first_frame = ttk.Frame(amount_frame)
         first_frame.pack(side=tk.LEFT, padx=2)
-        ttk.Label(first_frame, text="Turn-1:").pack(side=tk.LEFT)
+        ttk.Label(first_frame, text="Turn-1").pack(side=tk.LEFT)
         self.first_rebound_entry = ttk.Entry(first_frame, width=3)
         self.first_rebound_entry.pack(side=tk.LEFT)
         self.first_rebound_entry.insert(0, "220")
@@ -363,7 +363,7 @@ class CryptoTrader:
         # 反水N次设置
         n_frame = ttk.Frame(amount_frame)
         n_frame.pack(side=tk.LEFT, padx=2)
-        ttk.Label(n_frame, text="Turn-N:").pack(side=tk.LEFT)
+        ttk.Label(n_frame, text="Turn-N").pack(side=tk.LEFT)
         self.n_rebound_entry = ttk.Entry(n_frame, width=3)
         self.n_rebound_entry.pack(side=tk.LEFT)
         self.n_rebound_entry.insert(0, "120")
@@ -371,32 +371,18 @@ class CryptoTrader:
         # 利润率设置
         profit_frame = ttk.Frame(amount_frame)
         profit_frame.pack(side=tk.LEFT, padx=2)
-        ttk.Label(profit_frame, text="Margin:").pack(side=tk.LEFT)
-        self.profit_rate_entry = ttk.Entry(profit_frame, width=2)
+        ttk.Label(profit_frame, text="Margin").pack(side=tk.LEFT)
+        self.profit_rate_entry = ttk.Entry(profit_frame, width=4)
         self.profit_rate_entry.pack(side=tk.LEFT)
-        self.profit_rate_entry.insert(0, "1")
+        self.profit_rate_entry.insert(0, "1.5%")
 
-        # 翻倍周数
+        # 翻倍天数
         weeks_frame = ttk.Frame(amount_frame)
         weeks_frame.pack(side=tk.LEFT, padx=2)
         self.doubling_weeks_entry = ttk.Entry(weeks_frame, width=2, style='Red.TEntry')
         self.doubling_weeks_entry.pack(side=tk.LEFT)
         self.doubling_weeks_entry.insert(0, "44")
-        ttk.Label(weeks_frame, text="Double", style='Red.TLabel').pack(side=tk.LEFT)
-
-        # 交易币种按钮放在trades_frame中
-        ttk.Label(trades_frame, text="Cryptos:", style='Black.TLabel').pack(side=tk.LEFT, padx=(2,2))
-        buttons_frame = ttk.Frame(trades_frame)
-        buttons_frame.pack(side=tk.LEFT, padx=(0,0))
-
-        # 次数按钮
-        self.trade_buttons = {}  # 保存按钮引用
-
-        # 添加搜索BTC周链接按钮
-        self.btc_button = ttk.Button(buttons_frame, text="BTC", 
-                                         command=lambda: self.find_new_weekly_url('BTC'), width=3,
-                                         style='Blue.TButton')
-        self.btc_button.grid(row=1, column=0, padx=2, pady=3)
+        ttk.Label(weeks_frame, text="Day's D", style='Red.TLabel').pack(side=tk.LEFT)
 
         # 配置列权重使输入框均匀分布
         for i in range(8):
@@ -413,7 +399,7 @@ class CryptoTrader:
         
         # 监控网站配置
         url_frame = ttk.LabelFrame(scrollable_frame, text="Monitoring-Website-Configuration", padding=(2, 2))
-        url_frame.pack(fill="x", padx=10, pady=5)
+        url_frame.pack(fill="x", padx=2, pady=5)
         ttk.Label(url_frame, text="WEB:", font=('Arial', 10)).grid(row=0, column=0, padx=5, pady=5)
         
         # 创建下拉列和输入框组合控件
@@ -787,6 +773,7 @@ class CryptoTrader:
         self.set_amount_button['state'] = 'normal'
         # 启动页面刷新
         self.root.after(40000, self.refresh_page)
+        self.logger.info("启动页面自动刷新")
         # 启动登录状态监控
         self.root.after(8000, self.start_login_monitoring)
         # 启动URL监控
@@ -1504,7 +1491,8 @@ class CryptoTrader:
 
                 if self.running and self.driver and not self.trading:
                     self.driver.refresh()
-                    self.logger.info(f"✅ 定时刷新成功")      
+                    refresh_time = self.refresh_interval / 60000
+                    self.logger.info(f"✅ {refresh_time}分钟后刷新成功")      
                 else:
                     self.logger.info("刷新失败")
                     self.logger.info(f"trading={self.trading}")
