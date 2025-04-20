@@ -3301,7 +3301,7 @@ class CryptoTrader:
                             no_price = float(prices['no'])
 
                         # 判断 YES 和 NO 价格是否在 48-56 之间
-                        if (46 <= yes_price <= 56) or (46 <= no_price <= 56):
+                        if (40 <= yes_price <= 76) or (40 <= no_price <= 76):
                             # 保存当前 URL 到 config
                             self.config['website']['url'] = coin_new_weekly_url
                             self.save_config()
