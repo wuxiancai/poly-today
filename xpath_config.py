@@ -65,14 +65,14 @@ class XPathConfig:
         '/html/body/div[1]/div[2]/div/div/div/div/div/div[1]/div[3]/div/div/div/div/div[1]/div/div[1]/div[2]/div/div/input'
     ]
 
-    # 11.Position-Yes标签长期有效
-    POSITION_YES_LABEL = [
+    # 11.Position-Up标签长期有效
+    POSITION_UP_LABEL = [
         '//div[text()="Up"]',
         '//div[@class="c-dhzjXW c-chKWaB c-chKWaB-eVTycx-color-green c-dhzjXW-ibxvuTL-css" and text()="Up"]'
     ]
 
-    # 12.Position-No标签长期有效
-    POSITION_NO_LABEL = [
+    # 12.Position-Down标签长期有效
+    POSITION_DOWN_LABEL = [
         '//div[text()="Down"]',
         '//div[@class="c-dhzjXW c-chKWaB c-chKWaB-kNNGp-color-red c-dhzjXW-ibxvuTL-css" and text()="Down"]'
     ]

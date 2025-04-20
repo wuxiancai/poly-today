@@ -2169,7 +2169,7 @@ class CryptoTrader:
 
                 # 检查Yes5价格匹配
                 if 0 <= (yes_price - yes5_target) <= 0.01 and yes5_target > 0:
-                    self.logger.info("Yes 5价格匹配,执行自动卖出")
+                    self.logger.info("Up 5价格匹配,执行自动卖出")
                     while True:
                         # 执行卖出YES操作
                         self.only_sell_yes()
@@ -2239,7 +2239,7 @@ class CryptoTrader:
             
                 # 检查No5价格匹配
                 if 0 <= (no_price - no5_target) <= 0.01 and no5_target > 0:
-                    self.logger.info("No 5价格匹配,执行自动卖出")
+                    self.logger.info("Down 5价格匹配,执行自动卖出")
                     while True:
                         # 卖完 NO 后，自动再卖 YES                      
                         self.only_sell_no()
@@ -3025,22 +3025,22 @@ class CryptoTrader:
                 
                 # 尝试获取YES标签
                 try:
-                    position_label_yes = self.driver.find_element(By.XPATH, XPathConfig.POSITION_YES_LABEL[0])
-                    if position_label_yes.text == "Yes":
-                        self.logger.info(f"找到了Yes持仓标签: {position_label_yes.text}")
+                    position_label_yes = self.driver.find_element(By.XPATH, XPathConfig.POSITION_UP_LABEL[0])
+                    if position_label_yes.text == "Up":
+                        self.logger.info(f"找到了Up持仓标签: {position_label_yes.text}")
                         return True
                     else:
-                        self.logger.debug("未找到Yes持仓标签")
+                        self.logger.debug("未找到Up持仓标签")
                         return False
                     
                 except NoSuchElementException:
-                    position_label_yes = self._find_element_with_retry(XPathConfig.POSITION_YES_LABEL, timeout=3, silent=True)
+                    position_label_yes = self._find_element_with_retry(XPathConfig.POSITION_UP_LABEL, timeout=3, silent=True)
 
-                    if position_label_yes.text == "Yes":
-                        self.logger.info(f"找到了Yes持仓标签: {position_label_yes.text}")
+                    if position_label_yes.text == "Up":
+                        self.logger.info(f"找到了Up持仓标签: {position_label_yes.text}")
                         return True
                     else:
-                        self.logger.debug("未找到Yes持仓标签")
+                        self.logger.debug("未找到Up持仓标签")
                         return False
                          
             except TimeoutException:
@@ -3071,24 +3071,24 @@ class CryptoTrader:
                 
                 # 尝试获取NO标签
                 try:
-                    position_label_no = self.driver.find_element(By.XPATH, XPathConfig.POSITION_NO_LABEL[0])
+                    position_label_no = self.driver.find_element(By.XPATH, XPathConfig.POSITION_DOWN_LABEL[0])
                     
-                    if position_label_no.text == "No":
-                        self.logger.info(f"找到了No持仓标签: {position_label_no.text}")
+                    if position_label_no.text == "Down":
+                        self.logger.info(f"找到了Down持仓标签: {position_label_no.text}")
                         return True
                     else:
-                        self.logger.debug("未找到No持仓标签")
+                        self.logger.debug("未找到Down持仓标签")
                         return False
                     
                 except NoSuchElementException:
-                    position_label_no = self._find_element_with_retry(XPathConfig.POSITION_NO_LABEL, timeout=3, silent=True)
+                    position_label_no = self._find_element_with_retry(XPathConfig.POSITION_DOWN_LABEL, timeout=3, silent=True)
 
-                    if position_label_no.text == "No":
-                        self.logger.info(f"找到了No持仓标签: {position_label_no.text}")
+                    if position_label_no.text == "Down":
+                        self.logger.info(f"找到了Down持仓标签: {position_label_no.text}")
                         return True
                     else:
-                        self.logger.debug("未找到No持仓标签")
-                    return False
+                        self.logger.debug("未找到Down持仓标签")
+                        return False
                                
             except TimeoutException:
                 self.logger.warning(f"第{attempt + 1}次尝试未找到NO标签")
@@ -3105,18 +3105,18 @@ class CryptoTrader:
     def is_position_yes_or_no(self):
         self.logger.info("检查当前是否持仓")
         try:
-            # 同时检查Yes/No两种持仓标签
-            self.yes_element = self.find_position_label_yes()
-            self.no_element = self.find_position_label_no()
+            # 同时检查Up/Down两种持仓标签
+            self.up_element = self.find_position_label_yes()
+            self.down_element = self.find_position_label_no()
 
             full_pair = self.trading_pair_label.cget("text")
-            trading_pair = full_pair.split('-above')[0]
+            trading_pair = full_pair.split('-up')[0]
 
             # 任一标签显示持仓状态即返回True
-            if (self.yes_element and self.yes_element=="Yes") or (self.no_element and self.no_element=="No"):
-                self.logger.info(f"检测到持仓状态,持仓为{trading_pair}:{self.yes_element}或{self.no_element}")
+            if (self.up_element and self.up_element=="Up") or (self.down_element and self.down_element=="Down"):
+                self.logger.info(f"检测到持仓状态,持仓为{trading_pair}:{self.up_element}或{self.down_element}")
                 return True
-            elif self.yes_element is None and self.no_element is None:
+            elif self.up_element is None and self.down_element is None:
                 return False
             else:
                 return False    
