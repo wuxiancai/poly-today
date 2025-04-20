@@ -773,7 +773,7 @@ class CryptoTrader:
         self.set_amount_button['state'] = 'normal'
         # 启动页面刷新
         self.root.after(40000, self.refresh_page)
-        self.logger.info("启动页面自动刷新")
+        self.logger.info("✅ 页面自动刷新启动成功")
         # 启动登录状态监控
         self.root.after(8000, self.start_login_monitoring)
         # 启动URL监控
@@ -2929,8 +2929,8 @@ class CryptoTrader:
 
     def send_trade_email(self, trade_type, price, amount, trade_count):
         """发送交易邮件"""
-        max_retries = 3
-        retry_delay = 5
+        max_retries = 2
+        retry_delay = 2
         
         for attempt in range(max_retries):
             try:
@@ -3451,14 +3451,6 @@ class CryptoTrader:
                 
             # 保存当前窗口句柄作为局部变量，用于本方法内部使用
             original_tab = self.driver.current_window_handle
-
-            # 重置所有按钮样式为蓝色
-            for btn in [self.btc_button]:
-                btn.configure(style='Blue.TButton')
-            
-            # 设置被点击的按钮为红色
-            if coin == 'BTC':
-                self.btc_button.configure(style='Red.TButton')
             
             base_url = "https://polymarket.com/markets/crypto?_s=start_date%3Adesc"
             self.driver.switch_to.new_window('tab')
