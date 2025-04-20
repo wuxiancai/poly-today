@@ -1579,7 +1579,7 @@ class CryptoTrader:
                 # 检查Yes1价格匹配
                 if 0 <= (yes_price - yes1_target ) <= 0.03 and yes1_target > 0:
                     while True:
-                        self.logger.info("Yes 1价格匹配,执行自动交易")
+                        self.logger.info("Up 1价格匹配,执行自动交易")
                         # 执行现有的交易操作
                         self.amount_yes1_button.event_generate('<Button-1>')
                         time.sleep(0.5)
@@ -1638,7 +1638,7 @@ class CryptoTrader:
                 # 检查No1价格匹配
                 elif 0 <= (no_price - no1_target ) <= 0.03 and no1_target > 0:
                     while True:
-                        self.logger.info("No 1价格匹配,执行自动交易") 
+                        self.logger.info("Down 1价格匹配,执行自动交易") 
                         # 执行现有的交易操作
                         self.buy_no_button.invoke()
                         time.sleep(0.5)
@@ -1740,7 +1740,7 @@ class CryptoTrader:
                 # 检查Yes2价格匹配
                 if 0 <= (yes_price - yes2_target ) <= 0.03 and yes2_target > 0:
                     while True:
-                        self.logger.info("Yes 2价格匹配,执行自动交易")
+                        self.logger.info("Up 2价格匹配,执行自动交易")
                         # 执行现有的交易操作
                         self.amount_yes2_button.event_generate('<Button-1>')
                         time.sleep(0.5)
@@ -1789,7 +1789,7 @@ class CryptoTrader:
                 # 检查No2价格匹配
                 elif 0 <= (no_price - no2_target ) <= 0.03 and no2_target > 0:
                     while True:
-                        self.logger.info("No 2价格匹配,执行自动交易")
+                        self.logger.info("Down 2价格匹配,执行自动交易")
                         
                         # 执行现有的交易操作
                         self.buy_no_button.invoke()
@@ -1882,7 +1882,7 @@ class CryptoTrader:
                 # 检查Yes3价格匹配
                 if 0 <= (yes_price - yes3_target ) <= 0.03 and yes3_target > 0:
                     while True:
-                        self.logger.info("Yes 3价格匹配,执行自动交易")
+                        self.logger.info("Up 3价格匹配,执行自动交易")
                         # 执行交易操作
                         self.amount_yes3_button.event_generate('<Button-1>')
                         time.sleep(0.5)
@@ -1930,7 +1930,7 @@ class CryptoTrader:
                 # 检查No3价格匹配
                 elif 0 <= (no_price - no3_target ) <= 0.03 and no3_target > 0:
                     while True:
-                        self.logger.info("No 3价格匹配,执行自动交易")
+                        self.logger.info("Down 3价格匹配,执行自动交易")
                         # 执行交易操作
                         self.buy_no_button.invoke()
                         time.sleep(0.5)
@@ -2022,7 +2022,7 @@ class CryptoTrader:
                 # 检查Yes4价格匹配
                 if 0 <= (yes_price - yes4_target ) <= 0.03 and yes4_target > 0:
                     while True:
-                        self.logger.info("Yes 4价格匹配,执行自动交易")
+                        self.logger.info("Up 4价格匹配,执行自动交易")
                         # 执行交易操作
                         self.amount_yes4_button.event_generate('<Button-1>')
                         time.sleep(0.5)
@@ -2074,7 +2074,7 @@ class CryptoTrader:
                 # 检查No4价格匹配
                 elif 0 <= (no_price - no4_target ) <= 0.03 and no4_target > 0:
                     while True:
-                        self.logger.info("No 4价格匹配,执行自动交易")
+                        self.logger.info("Down 4价格匹配,执行自动交易")
                         # 执行交易操作
                         self.buy_no_button.invoke()
                         time.sleep(0.5)
@@ -2437,7 +2437,7 @@ class CryptoTrader:
             position_value = self.find_position_label_yes()
             self.logger.info(f"position_value: {position_value}")
             # 根据position_value的值决定点击哪个按钮
-            if position_value == "Up":
+            if position_value:
                 # 如果第一行是Up，点击第二的按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_NO_BUTTON[0])
@@ -2477,8 +2477,9 @@ class CryptoTrader:
             )
             position_value = None
             position_value = self.find_position_label_no()
+            self.logger.info(f"position_value: {position_value}")
             # 根据position_value的值决定点击哪个按钮
-            if position_value == "Down":
+            if position_value:
                 # 如果第二行是No，点击第一行YES 的 SELL的按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_YES_BUTTON[0])
@@ -2746,6 +2747,7 @@ class CryptoTrader:
         """
         验证交易是否成功完成Returns:bool: 交易是否成功
         """
+        time.sleep(1)
         try:
             # 首先验证浏览器状态
             if not self.driver:
@@ -2780,6 +2782,7 @@ class CryptoTrader:
         Returns:
         bool: 交易是否成功
         """
+        time.sleep(1)
         try:
             # 首先验证浏览器状态
             if not self.driver:
@@ -3057,7 +3060,7 @@ class CryptoTrader:
     def find_position_label_no(self):
         """查找Down持仓标签"""
         max_retries = 2
-        retry_delay = 1
+        retry_delay = 2
         
         for attempt in range(max_retries):
             try:
