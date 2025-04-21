@@ -1630,6 +1630,7 @@ class CryptoTrader:
                             self.no5_price_entry.insert(0, "0.98")
                             self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                             self.logger.info("First_trade执行成功")
+                            self.sleep_refresh("First_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -1691,6 +1692,7 @@ class CryptoTrader:
                             self.no5_price_entry.insert(0, "0.98")
                             self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                             self.logger.info("First_trade执行成功")
+                            self.sleep_refresh("First_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -1783,6 +1785,7 @@ class CryptoTrader:
                                 trade_count=self.trade_count
                             )
                             self.logger.info("Second_trade执行成功")
+                            self.sleep_refresh("Second_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -1835,6 +1838,7 @@ class CryptoTrader:
                                 trade_count=self.trade_count
                             )
                             self.logger.info("Second_trade执行成功")
+                            self.sleep_refresh("Second_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -1926,6 +1930,7 @@ class CryptoTrader:
                                 trade_count=self.trade_count
                             )   
                             self.logger.info("Third_trade执行成功")
+                            self.sleep_refresh("Third_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -1977,6 +1982,7 @@ class CryptoTrader:
                                 trade_count=self.trade_count
                             )
                             self.logger.info("Third_trade执行成功")
+                            self.sleep_refresh("Third_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -2055,7 +2061,7 @@ class CryptoTrader:
                             # 设置 Yes5和No5价格为0.85
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                             self.yes5_price_entry.delete(0, tk.END)
-                            self.yes5_price_entry.insert(0, "98")
+                            self.yes5_price_entry.insert(0, "0.98")
                             self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                             self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                             self.no5_price_entry.delete(0, tk.END)
@@ -2072,6 +2078,7 @@ class CryptoTrader:
                                 trade_count=self.trade_count
                             )
                             self.logger.info("Forth_trade执行成功")
+                            self.sleep_refresh("Forth_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -2105,15 +2112,15 @@ class CryptoTrader:
                             self.no4_price_entry.delete(0, tk.END)
                             self.no4_price_entry.insert(0, "0.00")
 
-                            """当买了 4次后预防第 5 次反水，所以价格到了 50 时就平仓，然后再自动开"""
-                            # 设置 Yes5和No5价格为0.85
+                            """当买了 4次后预防第 5 次反水，所以价格到了 52 时就平仓，然后再自动开"""
+                            # 设置 Yes5和No5价格为0.98
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                             self.yes5_price_entry.delete(0, tk.END)
                             self.yes5_price_entry.insert(0, "0.52")
                             self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                             self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                             self.no5_price_entry.delete(0, tk.END)
-                            self.no5_price_entry.insert(0, "98")
+                            self.no5_price_entry.insert(0, "0.98")
                             self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                             
                             # 增加交易次数
@@ -2126,6 +2133,7 @@ class CryptoTrader:
                                 trade_count=self.trade_count
                             )
                             self.logger.info("Forth_trade执行成功")
+                            self.sleep_refresh("Forth_trade")
                             break
                         else:
                             self.logger.warning("交易失败,等待2秒后重试")
@@ -2174,7 +2182,7 @@ class CryptoTrader:
                 self.trading = True  # 开始交易
 
                 # 检查Yes5价格匹配
-                if 0 <= (yes_price - yes5_target) and yes5_target > 0:
+                if 0 <= (yes_price - yes5_target) <= 0.03 and yes5_target > 0:
                     self.logger.info("Up 5价格匹配,执行自动卖出")
                     while True:
                         # 执行卖出YES操作
@@ -2244,7 +2252,7 @@ class CryptoTrader:
                 self.trading = True  # 开始交易
             
                 # 检查No5价格匹配
-                if 0 <= (no_price - no5_target) and no5_target > 0:
+                if 0 <= (no_price - no5_target) <= 0.03 and no5_target > 0:
                     self.logger.info("Down 5价格匹配,执行自动卖出")
                     while True:
                         # 卖完 Down 后，自动再卖 Up                      
@@ -2328,6 +2336,7 @@ class CryptoTrader:
                 amount=self.position_yes_cash(),  # 卖出时金额为总持仓
                 trade_count=self.sell_count  # 使用卖出计数器
             )
+            self.sleep_refresh("Sell_yes")
         else:
             self.logger.warning("卖出only_sell_yes验证失败,重试")
             return self.only_sell_yes()        
@@ -2380,6 +2389,7 @@ class CryptoTrader:
                 amount=self.position_no_cash(),  # 卖出时金额为总持仓
                 trade_count=self.sell_count  # 使用卖出计数器
             )
+            self.sleep_refresh("Sell_no")
         else:
             self.logger.warning("卖出only_sell_no验证失败,重试")
             return self.only_sell_no()
@@ -2867,7 +2877,7 @@ class CryptoTrader:
         """
         try:
             for i in range(1):  # 重复次数，修改数字即可
-                time.sleep(2)  # 等待2秒
+                time.sleep(4)  # 等待2秒
                 self.driver.refresh()    
         except Exception as e:
             self.logger.error(f"{operation_name} - sleep_refresh操作失败: {str(e)}")
@@ -3177,7 +3187,11 @@ class CryptoTrader:
         if self.login_running:
             self.logger.info("正在登录,退出自动找币")
             return
-
+        
+        if self.trading:
+            self.logger.info("正在交易,退出自动找币")
+            return
+        
         if self.contrast_portfolio_cash():
             self.stop_url_monitoring()
             self.stop_refresh_page()
@@ -3256,6 +3270,7 @@ class CryptoTrader:
                 self.auto_find_coin_timer = self.root.after(0, self.find_54_coin)    
             else:
                 self.start_auto_find_coin_running = False
+                self.stop_auto_find_coin()
 
     def find_54_coin(self):
         """自动找币,线程名:self.auto_find_coin_timer"""
