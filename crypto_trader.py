@@ -1596,7 +1596,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("First_trade"))
+                        self.sleep_refresh("First_trade")
 
                         if self.Verify_buy_yes():
                             # 增加交易次数
@@ -1657,7 +1657,7 @@ class CryptoTrader:
                             self.buy_confirm_button.invoke()
                         
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("First_trade"))
+                        self.sleep_refresh("First_trade")
                         
                         if self.Verify_buy_no():
                             # 增加交易次数
@@ -1757,7 +1757,8 @@ class CryptoTrader:
                             self.buy_confirm_button.invoke()
                             
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("Second_trade"))
+                        self.sleep_refresh("Second_trade")
+
                         if self.Verify_buy_yes():
                             
                             # 重置Yes2和No2价格为0.00
@@ -1808,7 +1809,8 @@ class CryptoTrader:
                             self.logger.info("✅ 点击 ENTER 完成")
                         
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("Second_trade"))
+                        self.sleep_refresh("Second_trade")
+
                         if self.Verify_buy_no():
 
                             # 重置Yes2和No2价格为0.00
@@ -1898,7 +1900,8 @@ class CryptoTrader:
                             self.logger.info("✅ 点击 ACCEPT 完成")
                         
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("Third_trade"))
+                        self.sleep_refresh("Third_trade")
+
                         if self.Verify_buy_yes():
 
                             # 重置Yes3和No3价格为0.00
@@ -1948,7 +1951,8 @@ class CryptoTrader:
                             self.logger.info("✅ 点击 ENTER 完成")
                         
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("Third_trade"))
+                        self.sleep_refresh("Third_trade")
+
                         if self.Verify_buy_no():
                             
                             # 重置Yes3和No3价格为0.00
@@ -2037,7 +2041,8 @@ class CryptoTrader:
                             self.logger.info("✅ 点击 ENTER 完成")
                         
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("Forth_trade"))
+                        self.sleep_refresh("Forth_trade")
+
                         if self.Verify_buy_yes():
 
                             # 重置Yes4和No4价格为0.00
@@ -2050,11 +2055,11 @@ class CryptoTrader:
                             # 设置 Yes5和No5价格为0.85
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                             self.yes5_price_entry.delete(0, tk.END)
-                            self.yes5_price_entry.insert(0, "0.51")
+                            self.yes5_price_entry.insert(0, "98")
                             self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                             self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                             self.no5_price_entry.delete(0, tk.END)
-                            self.no5_price_entry.insert(0, "0.02")
+                            self.no5_price_entry.insert(0, "0.52")
                             self.no5_price_entry.configure(foreground='red')  # 添加红色设置
 
                             # 增加交易次数
@@ -2091,7 +2096,8 @@ class CryptoTrader:
                             self.logger.info("✅ 点击 ENTER 完成")
                         
                         # 执行等待和刷新
-                        self.root.after(20000, self.sleep_refresh("Forth_trade"))
+                        self.sleep_refresh("Forth_trade")
+
                         if self.Verify_buy_no():
                             # 重置Yes4和No4价格为0.00
                             self.yes4_price_entry.delete(0, tk.END)
@@ -2103,11 +2109,11 @@ class CryptoTrader:
                             # 设置 Yes5和No5价格为0.85
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                             self.yes5_price_entry.delete(0, tk.END)
-                            self.yes5_price_entry.insert(0, "0.02")
+                            self.yes5_price_entry.insert(0, "0.52")
                             self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
                             self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
                             self.no5_price_entry.delete(0, tk.END)
-                            self.no5_price_entry.insert(0, "0.51")
+                            self.no5_price_entry.insert(0, "98")
                             self.no5_price_entry.configure(foreground='red')  # 添加红色设置
                             
                             # 增加交易次数
@@ -2168,12 +2174,12 @@ class CryptoTrader:
                 self.trading = True  # 开始交易
 
                 # 检查Yes5价格匹配
-                if 0 <= (yes_price - yes5_target) <= 0.01 and yes5_target > 0:
+                if 0 <= (yes_price - yes5_target) and yes5_target > 0:
                     self.logger.info("Up 5价格匹配,执行自动卖出")
                     while True:
                         # 执行卖出YES操作
                         self.only_sell_yes()
-                        self.logger.info("卖完 YES 后，再卖 NO")
+                        self.logger.info("卖完 Up 后，再卖 Down")
                         # 卖 NO 之前先检查是否有 NO 标签
                         if self.find_position_label_no():
                             self.only_sell_no()
@@ -2192,7 +2198,7 @@ class CryptoTrader:
                                 no_entry.insert(0, "0.00")
 
                         # 在所有操作完成后,重置交易
-                        self.reset_trade()
+                        self.root.after(2000, self.reset_trade)    
                         break
                     else:
                         self.logger.warning("卖出sell_yes验证失败,重试")
@@ -2238,7 +2244,7 @@ class CryptoTrader:
                 self.trading = True  # 开始交易
             
                 # 检查No5价格匹配
-                if 0 <= (no_price - no5_target) <= 0.01 and no5_target > 0:
+                if 0 <= (no_price - no5_target) and no5_target > 0:
                     self.logger.info("Down 5价格匹配,执行自动卖出")
                     while True:
                         # 卖完 Down 后，自动再卖 Up                      
@@ -2303,6 +2309,7 @@ class CryptoTrader:
         time.sleep(0.5)
         self.sell_confirm_button.invoke()
         time.sleep(0.5)
+
         if self.is_sell_accept():
             # 点击 "Accept" 按钮
             self.refocus_and_accept()
@@ -2354,6 +2361,7 @@ class CryptoTrader:
         time.sleep(0.5)
         self.sell_confirm_button.invoke()
         time.sleep(1)
+
         if self.is_sell_accept():
             # 点击 "Accept" 按钮
             self.refocus_and_accept()
@@ -2406,9 +2414,9 @@ class CryptoTrader:
             self.logger.info("没有检测到ACCEPT弹窗")
             return False
         
-    """以上代码是交易主体函数 1-4,从第 1370 行到第 2242行"""
+    """以上代码是交易主体函数 1-4,从第 1370 行到第 2418行"""
 
-    """以下代码是交易过程中的各种点击方法函数，涉及到按钮的点击，从第 2392 行到第 2528 行"""
+    """以下代码是交易过程中的各种点击方法函数，涉及到按钮的点击，从第 2419 行到第 2528 行"""
     def click_buy_confirm_button(self):
         try:
             buy_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.BUY_CONFIRM_BUTTON[0])
@@ -3305,7 +3313,7 @@ class CryptoTrader:
                             # 保存当前 URL 到 config
                             self.config['website']['url'] = coin_new_weekly_url
                             self.save_config()
-                            self.logger.info(f"{coin}: YES/{int(yes_price)}¢|NO/{int(no_price)}¢ ✅ 符合要求,已保存到 config")
+                            self.logger.info(f"\033[32m{coin}: YES/{int(yes_price)}¢|NO/{int(no_price)}¢ ✅ 符合要求,已保存到 config\033[0m")
 
                             # 清除url_entry中的url
                             self.url_entry.delete(0, tk.END)
@@ -3313,13 +3321,13 @@ class CryptoTrader:
                             self.url_entry.insert(0, coin_new_weekly_url)
 
                             self.target_url = self.url_entry.get()
-                            self.logger.info(f"✅ {self.target_url} 已插入到主界面上")
+                            self.logger.info(f"\033[32m✅ {self.target_url} 已插入到主界面上\033[0m")
                             self.start_url_monitoring()
                             self.refresh_page()
                             self.stop_auto_find_coin()  
                             return
                         else:
-                            self.logger.info(f"{coin}: YES/{int(yes_price)}¢|NO/{int(no_price)}¢ ❌ 不符合要求")           
+                            self.logger.info(f"\033[31m{coin}: YES/{int(yes_price)}¢|NO/{int(no_price)}¢ ❌ 不符合要求\033[0m")           
 
                 except Exception as e:
                     self.logger.error(f"处理{coin}时出错: {str(e)}")
@@ -3350,13 +3358,13 @@ class CryptoTrader:
             if hasattr(self, 'auto_find_coin_timer') and self.auto_find_coin_timer:
                 self.root.after_cancel(self.auto_find_coin_timer)
                 self.auto_find_coin_timer = None
-                self.logger.info("✅ 自动找币定时器已取消")
+                self.logger.info("\033[32m✅ 自动找币定时器已取消\033[0m")
             else:
                 self.logger.info("自动找币未在运行中,无需停止")
             # 设置标志位，让循环内部可以检测到停止信号
             self.start_auto_find_coin_running = False  
             self.stop_auto_find_running = True
-            self.logger.info("❌ 自动找币已停止")
+            self.logger.info("\033[31m❌ 自动找币已停止\033[0m")
         except Exception as e:
             self.logger.error(f"停止自动找币时发生错误: {str(e)}")
             self.stop_auto_find_running = True
@@ -3369,13 +3377,13 @@ class CryptoTrader:
             now_time = datetime.now(timezone.utc).astimezone(beijing_tz)
             
             # 判断是否在0点10分到0点30分之间
-            is_in_timeframe = (now_time.hour == 0 and 10 <= now_time.minute < 30)
+            is_in_timeframe = (now_time.hour == 0 and 5 <= now_time.minute < 30)
             
             # 记录日志
             if is_in_timeframe:
-                self.logger.info(f"\033[31m✅ {now_time.strftime('%H:%M:%S')} 在自动找币时间段内,开始找币!\033[0m")
+                self.logger.info(f"\033[32m✅ {now_time.strftime('%H:%M:%S')} 在自动找币时间段内,开始找币!\033[0m")
             else:
-                self.logger.info(f"❌ {now_time.strftime('%H:%M:%S')} 不在自动找币时间段内,停止找币!")
+                self.logger.info(f"\033[31m❌ {now_time.strftime('%H:%M:%S')} 不在自动找币时间段内,停止找币!\033[0m")
             
             return is_in_timeframe
             
